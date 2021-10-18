@@ -51,4 +51,15 @@ class MainViewModelTest {
         thrown.expectMessage("For input string: \"A\"")
         mainViewModel.calculate(width, height, length)
     }
+
+    @Test
+    @Throws(java.lang.NumberFormatException::class)
+    fun emptyInputCalculateTest() {
+        val width = "1"
+        val length = ""
+        val height = "3"
+        thrown.expect(java.lang.NumberFormatException::class.java)
+        thrown.expectMessage("For input string: \"\"")
+        mainViewModel.calculate(width, height, length)
+    }
 }

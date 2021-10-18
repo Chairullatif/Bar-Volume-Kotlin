@@ -3,6 +3,7 @@ package com.khoirullatif.barvolume
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.ViewModelProvider
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,6 +12,7 @@ import com.khoirullatif.barvolume.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 // dengan ViewBinding
     private lateinit var binding: ActivityMainBinding
+    private lateinit var viewModel: MainViewModel
 
 // ini tanpa menggunakan viewbinding
 //    private lateinit var edtWidth: EditText
@@ -35,10 +37,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 //        btnCalculate = findViewById(R.id.btn_calculate)
 //        tvResult = findViewById(R.id.tv_result)
 
-        if (savedInstanceState != null) {
-            val result = savedInstanceState.getString(STATE_RESULT)
-            binding.tvResult.text = result
-        }
+        //MENGGUNAKAN BUNDLE
+//        if (savedInstanceState != null) {
+//            val result = savedInstanceState.getString(STATE_RESULT)
+//            binding.tvResult.text = result
+//        }
+
+        //MENGGUNAKAN VIEWMODEL
+        viewModel = ViewModelProvider(this).get(MainViewModel::class.java)
+
+        displayResult()
 
         binding.btnCalculate.setOnClickListener(this)
     }
@@ -65,15 +73,20 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             if (!isEmptyField) {
-                val volume = inputHeight.toDouble() * inputWidth.toDouble() * inputLength.toDouble()
-                binding.tvResult.text = volume.toString()
+                viewModel.calculate(inputWidth, inputHeight, inputLength)
+                displayResult()
             }
 
         }
     }
 
+    private fun displayResult() {
+        binding.tvResult.text = viewModel.result.toString()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        outState.putString(STATE_RESULT, binding.tvResult.text.toString())
+        //MENGGUNAKAN BUNDLE
+//        outState.putString(STATE_RESULT, binding.tvResult.text.toString())
     }
 }
